@@ -1,0 +1,349 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,500;0,700;0,800;1,400;1,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-bg-primary: #030307;
+  --color-bg-secondary: #090911;
+  --color-bg-glass: rgba(13, 13, 23, 0.65);
+  --color-accent-lime: #00e5ff; /* Mapped lime class tokens to Electric Cyan for seamless re-branding */
+  --color-accent-cyan: #00e5ff;
+  --color-accent-orange: #ff6600;
+  --color-accent-red: #ff2d55;
+  --color-accent-blue: #00e5ff;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #8a8a9e;
+  --color-card-border: rgba(255, 255, 255, 0.06);
+  
+  --font-sans: "Inter", var(--font-geist-sans), sans-serif;
+  --font-barlow: "Barlow Condensed", sans-serif;
+  --font-mono: "JetBrains Mono", var(--font-geist-mono), monospace;
+}
+
+:root {
+  --background: #030307;
+  --foreground: #ffffff;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Base Glassmorphism utilities */
+.glass-panel {
+  background: rgba(13, 13, 23, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.6);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Neon Borders & Shadows */
+.neon-border-lime {
+  border-color: rgba(0, 229, 255, 0.15);
+}
+.neon-border-lime:hover {
+  border-color: rgba(0, 229, 255, 0.6);
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);
+}
+
+.neon-border-orange {
+  border-color: rgba(255, 102, 0, 0.15);
+}
+.neon-border-orange:hover {
+  border-color: rgba(255, 102, 0, 0.6);
+  box-shadow: 0 0 20px rgba(255, 102, 0, 0.15);
+}
+
+.neon-border-red {
+  border-color: rgba(255, 45, 85, 0.15);
+}
+.neon-border-red:hover {
+  border-color: rgba(255, 45, 85, 0.6);
+  box-shadow: 0 0 20px rgba(255, 45, 85, 0.15);
+}
+
+.neon-border-blue {
+  border-color: rgba(0, 229, 255, 0.15);
+}
+.neon-border-blue:hover {
+  border-color: rgba(0, 229, 255, 0.6);
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);
+}
+
+/* Neon Text Glows */
+.glow-text-lime {
+  text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+}
+.glow-text-orange {
+  text-shadow: 0 0 10px rgba(255, 102, 0, 0.5);
+}
+.glow-text-blue {
+  text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+}
+
+/* Cyber Form Elements */
+.cyber-input {
+  background: rgba(9, 9, 17, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  color: #ffffff;
+  font-size: 0.875rem;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+}
+.cyber-input:focus {
+  border-color: #00e5ff;
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.25);
+  background: rgba(0, 229, 255, 0.02);
+}
+
+/* Custom Checkbox */
+.cyber-checkbox {
+  appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  background: rgba(0,0,0,0.3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  outline: none;
+}
+.cyber-checkbox:checked {
+  background: #00e5ff;
+  border-color: #00e5ff;
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+}
+.cyber-checkbox:checked::before {
+  content: "✓";
+  color: #000;
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+/* Cyber Buttons */
+.btn-cyber-primary {
+  background: #00e5ff;
+  color: #000000;
+  font-family: var(--font-barlow);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(0, 229, 255, 0.25);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.btn-cyber-primary:hover {
+  background: #33edff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(0, 229, 255, 0.45);
+}
+.btn-cyber-primary:active {
+  transform: translateY(1px);
+}
+.btn-cyber-primary:disabled {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.2);
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-cyber-secondary {
+  background: rgba(255, 255, 255, 0.03);
+  color: #ffffff;
+  font-family: var(--font-barlow);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.btn-cyber-secondary:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+.btn-cyber-secondary:active {
+  transform: translateY(1px);
+}
+
+.btn-cyber-danger {
+  background: rgba(255, 45, 85, 0.1);
+  color: #ff2d55;
+  font-family: var(--font-barlow);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid rgba(255, 45, 85, 0.2);
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.btn-cyber-danger:hover {
+  background: #ff2d55;
+  color: #ffffff;
+  border-color: transparent;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 45, 85, 0.3);
+}
+.btn-cyber-danger:active {
+  transform: translateY(1px);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #030307;
+}
+::-webkit-scrollbar-thumb {
+  background: #131322;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #00e5ff;
+}
+
+/* Complex Wave Liquid Animation for Hydration Tracker */
+@keyframes wave-move {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.cyber-glass-container {
+  position: relative;
+  width: 130px;
+  height: 170px;
+  background: rgba(255, 255, 255, 0.01);
+  border: 3px solid rgba(255, 255, 255, 0.08);
+  border-top-width: 1px;
+  border-radius: 0 0 24px 24px;
+  box-shadow: 
+    0 10px 30px rgba(0,0,0,0.5),
+    inset 0 0 15px rgba(255,255,255,0.02);
+  overflow: hidden;
+}
+.cyber-glass-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.1), transparent);
+}
+.wave-liquid {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(180deg, #00e5ff 0%, #0070f3 100%);
+  transition: height 1s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+}
+.wave-bubble {
+  position: absolute;
+  top: -85px;
+  left: -50%;
+  width: 200%;
+  height: 200px;
+  background: #030307;
+  border-radius: 42%;
+  animation: wave-move 10s linear infinite;
+  opacity: 0.95;
+}
+.wave-bubble-second {
+  position: absolute;
+  top: -80px;
+  left: -45%;
+  width: 190%;
+  height: 190px;
+  background: #0070f3;
+  border-radius: 38%;
+  animation: wave-move 8s linear infinite;
+  opacity: 0.3;
+}
+
+/* scanner line for AI estimation */
+@keyframes laser-scan {
+  0% { top: 0%; opacity: 0.8; }
+  50% { top: 100%; opacity: 0.8; }
+  100% { top: 0%; opacity: 0.8; }
+}
+.laser-scanner {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00e5ff, transparent);
+  box-shadow: 0 0 15px #00e5ff, 0 0 3px #00e5ff;
+  animation: laser-scan 2.5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Float Animations */
+@keyframes gym-float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(4deg);
+  }
+}
+.animate-float-slow {
+  animation: gym-float 7s ease-in-out infinite;
+}
+.animate-float-medium {
+  animation: gym-float 5s ease-in-out infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
