@@ -161,7 +161,7 @@ export default function Dashboard() {
               </svg>
             </div>
             <div className="flex flex-col">
-              <span className="font-barlow text-lg font-black uppercase text-white leading-none">🔥 12 Day Streak</span>
+              <span className="font-barlow text-lg font-black uppercase text-white leading-none">🔥 0 Day Streak</span>
               <span className="text-[10px] uppercase font-bold tracking-widest text-accent-orange mt-0.5">Keep grinding!</span>
             </div>
           </div>
