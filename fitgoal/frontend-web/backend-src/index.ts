@@ -67,10 +67,6 @@ app.get('/health', (req, res) => {
 // Error handling middleware
 app.use(errorHandler);
 
-if (!process.env.VERCEL) {
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
-  });
-}
+
 
 export default app;

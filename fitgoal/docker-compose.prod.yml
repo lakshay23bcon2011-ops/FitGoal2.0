@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7
+    container_name: fitgoal-db-prod
+    restart: always
+    volumes:
+      - fitgoal_prod_data:/data/db
+    # In production, you should ideally add a username/password to MongoDB
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.backend
+    container_name: fitgoal-api-prod
+    restart: always
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - .env
+    depends_on:
+      - mongodb
+    ports:
+      - "3001:3001"
+
+volumes:
+  fitgoal_prod_data:
