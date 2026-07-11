@@ -1,17 +1,30 @@
 import mongoose from 'mongoose';
 
+let connectionPromise: Promise<typeof mongoose> | null = null;
+
 export const connectDB = async () => {
+  // Skip during Next.js production build phase
+  if (process.env.NEXT_PHASE === 'phase-production-build') {
+    return;
+  }
+
   if (mongoose.connection.readyState >= 1) {
     return;
   }
-  try {
+
+  if (!connectionPromise) {
     const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/fitgoal';
-    const conn = await mongoose.connect(mongoUri);
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
-  } catch (error) {
-    console.error('Database connection error:', error);
-    if (!process.env.VERCEL) {
-      process.exit(1);
-    }
+    connectionPromise = mongoose.connect(mongoUri)
+      .then((conn) => {
+        console.log(`MongoDB Connected: ${conn.connection.host}`);
+        return conn;
+      })
+      .catch((error) => {
+        connectionPromise = null;
+        console.error('Database connection error:', error);
+        throw error;
+      });
   }
+
+  return connectionPromise;
 };

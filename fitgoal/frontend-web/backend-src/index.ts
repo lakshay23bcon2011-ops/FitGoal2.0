@@ -19,8 +19,15 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Connect to Database
-connectDB();
+// Lazy DB connection middleware — connects on first request, not at import time
+app.use(async (_req: any, _res: any, next: any) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 
 // Global Middlewares
 app.use(helmet());

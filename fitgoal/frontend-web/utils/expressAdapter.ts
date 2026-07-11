@@ -1,11 +1,10 @@
 import { NextRequest } from 'next/server';
 import http from 'http';
-import { Socket } from 'net';
 
 export function runExpress(app: any, req: NextRequest): Promise<Response> {
   return new Promise<Response>(async (resolve, reject) => {
-    // 1. Create a dummy socket
-    const socket = new Socket();
+    // 1. Create a minimal mock socket (avoids importing net.Socket which is unavailable on Vercel serverless)
+    const socket = { destroy: () => {}, on: () => socket, removeListener: () => socket } as any;
 
     // 2. Instantiate a Node.js http.IncomingMessage
     const incomingMessage = new http.IncomingMessage(socket);
