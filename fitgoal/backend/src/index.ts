@@ -25,7 +25,7 @@ connectDB();
 // Global Middlewares
 app.use(helmet());
 
-// Improved CORS for production
+// Improved CORS for production and development
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',')
   : ['http://localhost:3000'];
@@ -34,7 +34,13 @@ app.use(cors({
   origin: (origin, callback) => {
     // allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
+    
+    // Check if the origin matches local development or any vercel.app deployment
+    const isAllowed = allowedOrigins.indexOf(origin) !== -1 ||
+      origin.endsWith('.vercel.app') ||
+      /^https?:\/\/localhost(:\d+)?$/.test(origin);
+
+    if (!isAllowed) {
       const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
       return callback(new Error(msg), false);
     }
