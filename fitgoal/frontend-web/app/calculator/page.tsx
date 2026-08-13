@@ -28,6 +28,92 @@ interface SearchFoodItem {
   servingSize: number;
 }
 
+const POPULAR_RAW_MATERIALS: SearchFoodItem[] = [
+  // Dairy
+  { _id: 'raw_paneer', name: 'Raw Paneer (Cottage Cheese)', servingSize: 100 },
+  { _id: 'raw_milk', name: 'Full Cream Cow Milk', servingSize: 100 },
+  { _id: 'toned_milk', name: 'Toned Milk (Low Fat)', servingSize: 100 },
+  { _id: 'skimmed_milk', name: 'Skimmed Milk', servingSize: 100 },
+  { _id: 'desi_ghee', name: 'Desi Ghee (Clarified Butter)', servingSize: 10 },
+  { _id: 'butter', name: 'Butter (Makkhan)', servingSize: 10 },
+  { _id: 'fresh_cream', name: 'Fresh Milk Cream (Malai)', servingSize: 100 },
+  { _id: 'greek_yogurt', name: 'Greek Yogurt (Plain)', servingSize: 100 },
+  { _id: 'hung_curd', name: 'Hung Curd', servingSize: 100 },
+  { _id: 'khoya', name: 'Khoya / Mawa', servingSize: 100 },
+  { _id: 'cheese_slice', name: 'Cheese Slice', servingSize: 20 },
+  { _id: 'mozzarella', name: 'Mozzarella Cheese', servingSize: 100 },
+
+  // Pulses & Legumes (Dals)
+  { _id: 'moong_dal', name: 'Raw Yellow Moong Dal', servingSize: 100 },
+  { _id: 'toor_dal', name: 'Raw Toor / Arhar Dal', servingSize: 100 },
+  { _id: 'chana_dal', name: 'Raw Chana Dal', servingSize: 100 },
+  { _id: 'masoor_dal', name: 'Raw Masoor Dal', servingSize: 100 },
+  { _id: 'urad_dal', name: 'Raw Urad Dal', servingSize: 100 },
+  { _id: 'rajma', name: 'Raw Rajma (Red Kidney Beans)', servingSize: 100 },
+  { _id: 'kabuli_chana', name: 'Raw White Chickpeas (Kabuli Chana)', servingSize: 100 },
+  { _id: 'black_chana', name: 'Raw Black Chana (Kala Chana)', servingSize: 100 },
+  { _id: 'soybean', name: 'Raw Soybeans', servingSize: 100 },
+  { _id: 'lobia', name: 'Raw Lobia (Black Eyed Peas)', servingSize: 100 },
+  { _id: 'sprouted_moong', name: 'Sprouted Moong', servingSize: 100 },
+
+  // Grains & Cereals
+  { _id: 'basmati_rice', name: 'Raw Basmati Rice', servingSize: 100 },
+  { _id: 'brown_rice', name: 'Raw Brown Rice', servingSize: 100 },
+  { _id: 'rolled_oats', name: 'Rolled Oats / Raw Oats', servingSize: 100 },
+  { _id: 'poha', name: 'Raw Poha (Flattened Rice)', servingSize: 100 },
+  { _id: 'sooji', name: 'Raw Sooji / Semolina', servingSize: 100 },
+  { _id: 'sabudana', name: 'Raw Sabudana (Tapioca Pearls)', servingSize: 100 },
+  { _id: 'dalia', name: 'Raw Dalia (Broken Wheat)', servingSize: 100 },
+  { _id: 'quinoa', name: 'Raw Quinoa', servingSize: 100 },
+  { _id: 'ragi_grain', name: 'Raw Ragi (Finger Millet)', servingSize: 100 },
+  { _id: 'bajra_grain', name: 'Raw Bajra (Pearl Millet)', servingSize: 100 },
+  { _id: 'jowar_grain', name: 'Raw Jowar (Sorghum)', servingSize: 100 },
+  { _id: 'sweet_corn', name: 'Sweet Corn (Raw Kernels)', servingSize: 100 },
+
+  // Flours
+  { _id: 'wheat_atta', name: 'Whole Wheat Flour (Gehun ka Atta)', servingSize: 100 },
+  { _id: 'besan', name: 'Besan (Gram Flour)', servingSize: 100 },
+  { _id: 'maida', name: 'Maida (All-Purpose Flour)', servingSize: 100 },
+  { _id: 'ragi_atta', name: 'Ragi Flour (Ragi Atta)', servingSize: 100 },
+  { _id: 'bajra_atta', name: 'Bajra Flour (Bajra Atta)', servingSize: 100 },
+  { _id: 'jowar_atta', name: 'Jowar Flour (Jowar Atta)', servingSize: 100 },
+  { _id: 'rice_flour', name: 'Rice Flour (Chawal ka Atta)', servingSize: 100 },
+  { _id: 'multigrain_atta', name: 'Multigrain Atta', servingSize: 100 },
+  { _id: 'corn_flour', name: 'Corn Flour / Cornstarch', servingSize: 100 },
+
+  // Spices & Seasonings
+  { _id: 'cooking_oil', name: 'Cooking Oil (Mustard / Refined)', servingSize: 10 },
+  { _id: 'olive_oil', name: 'Olive Oil (Extra Virgin)', servingSize: 10 },
+  { _id: 'turmeric', name: 'Turmeric Powder (Haldi)', servingSize: 5 },
+  { _id: 'red_chilli', name: 'Red Chilli Powder', servingSize: 5 },
+  { _id: 'coriander_powder', name: 'Coriander Powder (Dhaniya Powder)', servingSize: 5 },
+  { _id: 'jeera', name: 'Cumin Seeds (Jeera)', servingSize: 5 },
+  { _id: 'garam_masala', name: 'Garam Masala', servingSize: 5 },
+  { _id: 'ginger_garlic_paste', name: 'Ginger Garlic Paste', servingSize: 10 },
+  { _id: 'raw_ginger', name: 'Raw Ginger (Adrak)', servingSize: 10 },
+  { _id: 'raw_garlic', name: 'Raw Garlic (Lahsun)', servingSize: 10 },
+  { _id: 'raw_onion', name: 'Raw Onion', servingSize: 100 },
+  { _id: 'raw_tomato', name: 'Raw Tomato', servingSize: 100 },
+  { _id: 'green_chillies', name: 'Green Chillies', servingSize: 20 },
+  { _id: 'white_sugar', name: 'Sugar (White)', servingSize: 10 },
+  { _id: 'jaggery', name: 'Jaggery (Gur)', servingSize: 10 },
+  { _id: 'honey', name: 'Honey', servingSize: 10 },
+
+  // Proteins, Meats, Eggs, Nuts & Seeds
+  { _id: 'chicken_breast', name: 'Raw Chicken Breast', servingSize: 100 },
+  { _id: 'whole_egg', name: 'Whole Egg (Raw)', servingSize: 50 },
+  { _id: 'egg_white', name: 'Egg White (Raw)', servingSize: 33 },
+  { _id: 'tofu', name: 'Tofu (Soy Paneer)', servingSize: 100 },
+  { _id: 'soya_chunks', name: 'Raw Soya Chunks', servingSize: 100 },
+  { _id: 'whey_protein', name: 'Whey Protein Powder', servingSize: 30 },
+  { _id: 'raw_almonds', name: 'Raw Almonds (Badam)', servingSize: 20 },
+  { _id: 'raw_cashews', name: 'Raw Cashews (Kaju)', servingSize: 20 },
+  { _id: 'walnuts', name: 'Walnuts (Akhrot)', servingSize: 20 },
+  { _id: 'chia_seeds', name: 'Chia Seeds', servingSize: 15 },
+  { _id: 'flax_seeds', name: 'Flax Seeds (Alsi)', servingSize: 15 },
+  { _id: 'raw_peanuts', name: 'Raw Peanuts (Groundnuts)', servingSize: 20 }
+];
+
 export default function AICalorieCalculator() {
   const { user } = useAuth();
   
@@ -89,14 +175,31 @@ export default function AICalorieCalculator() {
         return;
       }
       setSearching(true);
+      
+      const termLower = ingQuery.trim().toLowerCase();
+      const localMatches = POPULAR_RAW_MATERIALS.filter(item =>
+        item.name.toLowerCase().includes(termLower)
+      );
+
       try {
         const res = await api.get(`/food/search?q=${ingQuery}`);
-        if (res.data.success) {
-          setIngResults(res.data.data);
-          setShowDropdown(res.data.data.length > 0);
+        if (res.data.success && res.data.data.length > 0) {
+          const merged = [...localMatches];
+          res.data.data.forEach((item: SearchFoodItem) => {
+            if (!merged.some(m => m.name.toLowerCase() === item.name.toLowerCase())) {
+              merged.push(item);
+            }
+          });
+          setIngResults(merged.slice(0, 25));
+          setShowDropdown(merged.length > 0);
+        } else {
+          setIngResults(localMatches.slice(0, 25));
+          setShowDropdown(localMatches.length > 0);
         }
       } catch (err) {
         console.error('Failed to search ingredients:', err);
+        setIngResults(localMatches.slice(0, 25));
+        setShowDropdown(localMatches.length > 0);
       } finally {
         setSearching(false);
       }
@@ -104,7 +207,7 @@ export default function AICalorieCalculator() {
 
     const delay = setTimeout(() => {
       searchIngredients();
-    }, 300);
+    }, 150);
 
     return () => clearTimeout(delay);
   }, [ingQuery]);
