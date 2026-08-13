@@ -91,7 +91,8 @@ export default function Navigation() {
         {/* Mobile menu toggle */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden text-white focus:outline-none hover:text-accent-lime transition-colors"
+          aria-label="Toggle navigation menu"
+          className="md:hidden text-white p-2 focus:outline-none hover:text-accent-lime transition-colors cursor-pointer"
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             {mobileMenuOpen ? (

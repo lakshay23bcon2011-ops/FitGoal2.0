@@ -14,9 +14,9 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const [age, setAge] = useState<number>(25);
-  const [weight, setWeight] = useState<number>(70);
-  const [height, setHeight] = useState<number>(170);
+  const [age, setAge] = useState<number | ''>(25);
+  const [weight, setWeight] = useState<number | ''>(70);
+  const [height, setHeight] = useState<number | ''>(170);
   const [gender, setGender] = useState<'male' | 'female' | 'other'>('male');
   const [goal, setGoal] = useState<'bulk' | 'cut' | 'maintain'>('maintain');
   const [activityLevel, setActivityLevel] = useState<'sedentary' | 'light' | 'moderate' | 'active' | 'very_active'>('moderate');
@@ -34,9 +34,9 @@ export default function LoginPage() {
           name,
           email,
           password,
-          age,
-          weight,
-          height,
+          age: typeof age === 'number' ? age : 25,
+          weight: typeof weight === 'number' ? weight : 70,
+          height: typeof height === 'number' ? height : 170,
           gender,
           goal,
           activityLevel,
@@ -176,7 +176,12 @@ export default function LoginPage() {
                       min="10"
                       max="100"
                       value={age}
-                      onChange={(e) => setAge(parseInt(e.target.value) || 25)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === '') setAge('');
+                        else setAge(parseInt(val, 10) || '');
+                      }}
+                      onBlur={() => { if (age === '' || age <= 0) setAge(25); }}
                       className="cyber-input w-full text-center font-mono"
                     />
                   </div>
@@ -188,7 +193,12 @@ export default function LoginPage() {
                       min="30"
                       max="300"
                       value={weight}
-                      onChange={(e) => setWeight(parseFloat(e.target.value) || 70)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === '') setWeight('');
+                        else setWeight(parseFloat(val) || '');
+                      }}
+                      onBlur={() => { if (weight === '' || weight <= 0) setWeight(70); }}
                       className="cyber-input w-full text-center font-mono"
                     />
                   </div>
@@ -200,7 +210,12 @@ export default function LoginPage() {
                       min="100"
                       max="250"
                       value={height}
-                      onChange={(e) => setHeight(parseFloat(e.target.value) || 170)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === '') setHeight('');
+                        else setHeight(parseFloat(val) || '');
+                      }}
+                      onBlur={() => { if (height === '' || height <= 0) setHeight(170); }}
                       className="cyber-input w-full text-center font-mono"
                     />
                   </div>

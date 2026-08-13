@@ -48,7 +48,7 @@ export default function WorkoutPage() {
 
   // LOG WORKOUT STATES
   const [sessionName, setSessionName] = useState('Push Day');
-  const [duration, setDuration] = useState<number>(60); // minutes
+  const [duration, setDuration] = useState<number | ''>(60); // minutes
   const [mood, setMood] = useState<'terrible' | 'bad' | 'okay' | 'good' | 'great'>('good');
   const [loggedExercises, setLoggedExercises] = useState<ExerciseLogEntry[]>([]);
   
@@ -303,7 +303,20 @@ export default function WorkoutPage() {
                   <input
                     type="number"
                     value={duration}
-                    onChange={(e) => setDuration(parseInt(e.target.value) || 30)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '') {
+                        setDuration('');
+                      } else {
+                        const parsed = parseInt(val, 10);
+                        setDuration(isNaN(parsed) ? '' : parsed);
+                      }
+                    }}
+                    onBlur={() => {
+                      if (duration === '' || duration <= 0) {
+                        setDuration(30);
+                      }
+                    }}
                     className="cyber-input w-full font-mono text-center"
                   />
                 </div>

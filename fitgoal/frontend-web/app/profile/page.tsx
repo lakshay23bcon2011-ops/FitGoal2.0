@@ -9,19 +9,19 @@ export default function ProfilePage() {
   const { user, updateProfile } = useAuth();
   
   const [name, setName] = useState('');
-  const [age, setAge] = useState<number>(25);
-  const [weight, setWeight] = useState<number>(70);
-  const [height, setHeight] = useState<number>(170);
+  const [age, setAge] = useState<number | ''>(25);
+  const [weight, setWeight] = useState<number | ''>(70);
+  const [height, setHeight] = useState<number | ''>(170);
   const [gender, setGender] = useState<'male' | 'female' | 'other'>('male');
   const [goal, setGoal] = useState<'bulk' | 'cut' | 'maintain'>('maintain');
   const [activityLevel, setActivityLevel] = useState<'sedentary' | 'light' | 'moderate' | 'active' | 'very_active'>('moderate');
 
   // Custom targets overrides
-  const [targetCalories, setTargetCalories] = useState<number>(2000);
-  const [targetProtein, setTargetProtein] = useState<number>(120);
-  const [targetCarbs, setTargetCarbs] = useState<number>(200);
-  const [targetFat, setTargetFat] = useState<number>(65);
-  const [targetWater, setTargetWater] = useState<number>(3000);
+  const [targetCalories, setTargetCalories] = useState<number | ''>(2000);
+  const [targetProtein, setTargetProtein] = useState<number | ''>(120);
+  const [targetCarbs, setTargetCarbs] = useState<number | ''>(200);
+  const [targetFat, setTargetFat] = useState<number | ''>(65);
+  const [targetWater, setTargetWater] = useState<number | ''>(3000);
 
   const [saving, setSaving] = useState(false);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
@@ -47,7 +47,11 @@ export default function ProfilePage() {
 
   // Mifflin-St Jeor TDEE Calculator
   const getCalculatedTDEE = () => {
-    const baseBMR = 10 * weight + 6.25 * height - 5 * age;
+    const numWeight = typeof weight === 'number' && weight > 0 ? weight : 70;
+    const numHeight = typeof height === 'number' && height > 0 ? height : 170;
+    const numAge = typeof age === 'number' && age > 0 ? age : 25;
+
+    const baseBMR = 10 * numWeight + 6.25 * numHeight - 5 * numAge;
     const bmr = gender === 'male' ? baseBMR + 5 : gender === 'female' ? baseBMR - 161 : baseBMR - 80;
     
     const multipliers = {
@@ -74,14 +78,15 @@ export default function ProfilePage() {
   const { bmr, tdee, recommendedCalories } = getCalculatedTDEE();
 
   const handleApplyRecommended = () => {
+    const numWeight = typeof weight === 'number' && weight > 0 ? weight : 70;
     setTargetCalories(recommendedCalories);
-    const recommendedProtein = Math.round(weight * 2.0);
+    const recommendedProtein = Math.round(numWeight * 2.0);
     setTargetProtein(recommendedProtein);
     const recommendedFat = Math.round((recommendedCalories * 0.25) / 9);
     setTargetFat(recommendedFat);
     const recommendedCarbs = Math.max(50, Math.round((recommendedCalories - (recommendedProtein * 4 + recommendedFat * 9)) / 4));
     setTargetCarbs(recommendedCarbs);
-    const recommendedWater = Math.max(3000, Math.round(weight * 35));
+    const recommendedWater = Math.max(3000, Math.round(numWeight * 35));
     setTargetWater(recommendedWater);
   };
 
@@ -92,17 +97,17 @@ export default function ProfilePage() {
     try {
       await updateProfile({
         name,
-        age,
-        weight,
-        height,
+        age: typeof age === 'number' ? age : 25,
+        weight: typeof weight === 'number' ? weight : 70,
+        height: typeof height === 'number' ? height : 170,
         gender,
         goal,
         activityLevel,
-        targetCalories,
-        targetProtein,
-        targetCarbs,
-        targetFat,
-        targetWater,
+        targetCalories: typeof targetCalories === 'number' ? targetCalories : 2000,
+        targetProtein: typeof targetProtein === 'number' ? targetProtein : 120,
+        targetCarbs: typeof targetCarbs === 'number' ? targetCarbs : 200,
+        targetFat: typeof targetFat === 'number' ? targetFat : 65,
+        targetWater: typeof targetWater === 'number' ? targetWater : 3000,
       });
       setSuccessMsg('Profile and targets saved successfully!');
       setTimeout(() => setSuccessMsg(null), 3000);
@@ -164,7 +169,12 @@ export default function ProfilePage() {
                   min="10"
                   max="100"
                   value={age}
-                  onChange={(e) => setAge(parseInt(e.target.value) || 25)}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === '') setAge('');
+                    else setAge(parseInt(val, 10) || '');
+                  }}
+                  onBlur={() => { if (age === '' || age <= 0) setAge(25); }}
                   className="cyber-input w-full font-mono"
                 />
               </div>
@@ -177,7 +187,12 @@ export default function ProfilePage() {
                   min="30"
                   max="300"
                   value={weight}
-                  onChange={(e) => setWeight(parseFloat(e.target.value) || 70)}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === '') setWeight('');
+                    else setWeight(parseFloat(val) || '');
+                  }}
+                  onBlur={() => { if (weight === '' || weight <= 0) setWeight(70); }}
                   className="cyber-input w-full font-mono"
                 />
               </div>
@@ -190,7 +205,12 @@ export default function ProfilePage() {
                   min="100"
                   max="250"
                   value={height}
-                  onChange={(e) => setHeight(parseFloat(e.target.value) || 170)}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === '') setHeight('');
+                    else setHeight(parseFloat(val) || '');
+                  }}
+                  onBlur={() => { if (height === '' || height <= 0) setHeight(170); }}
                   className="cyber-input w-full font-mono"
                 />
               </div>
@@ -286,7 +306,12 @@ export default function ProfilePage() {
                   <input
                     type="number"
                     value={targetCalories}
-                    onChange={(e) => setTargetCalories(parseInt(e.target.value) || 1200)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '') setTargetCalories('');
+                      else setTargetCalories(parseInt(val, 10) || '');
+                    }}
+                    onBlur={() => { if (targetCalories === '') setTargetCalories(2000); }}
                     className="cyber-input w-full font-mono"
                   />
                 </div>
@@ -297,7 +322,12 @@ export default function ProfilePage() {
                     <input
                       type="number"
                       value={targetProtein}
-                      onChange={(e) => setTargetProtein(parseInt(e.target.value) || 0)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === '') setTargetProtein('');
+                        else setTargetProtein(parseInt(val, 10) || 0);
+                      }}
+                      onBlur={() => { if (targetProtein === '') setTargetProtein(120); }}
                       className="cyber-input w-full font-mono text-center px-1"
                     />
                   </div>
@@ -306,7 +336,12 @@ export default function ProfilePage() {
                     <input
                       type="number"
                       value={targetCarbs}
-                      onChange={(e) => setTargetCarbs(parseInt(e.target.value) || 0)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === '') setTargetCarbs('');
+                        else setTargetCarbs(parseInt(val, 10) || 0);
+                      }}
+                      onBlur={() => { if (targetCarbs === '') setTargetCarbs(200); }}
                       className="cyber-input w-full font-mono text-center px-1"
                     />
                   </div>
@@ -315,7 +350,12 @@ export default function ProfilePage() {
                     <input
                       type="number"
                       value={targetFat}
-                      onChange={(e) => setTargetFat(parseInt(e.target.value) || 0)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === '') setTargetFat('');
+                        else setTargetFat(parseInt(val, 10) || 0);
+                      }}
+                      onBlur={() => { if (targetFat === '') setTargetFat(65); }}
                       className="cyber-input w-full font-mono text-center px-1"
                     />
                   </div>
@@ -327,7 +367,12 @@ export default function ProfilePage() {
                     type="number"
                     step="250"
                     value={targetWater}
-                    onChange={(e) => setTargetWater(parseInt(e.target.value) || 3000)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '') setTargetWater('');
+                      else setTargetWater(parseInt(val, 10) || '');
+                    }}
+                    onBlur={() => { if (targetWater === '') setTargetWater(3000); }}
                     className="cyber-input w-full font-mono"
                   />
                 </div>

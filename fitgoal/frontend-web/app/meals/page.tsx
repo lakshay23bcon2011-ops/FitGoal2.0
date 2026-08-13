@@ -59,7 +59,7 @@ export default function MealsPage() {
   const [selectedFood, setSelectedFood] = useState<IndianFood | null>(null);
 
   // Log configurations
-  const [quantity, setQuantity] = useState<number>(100);
+  const [quantity, setQuantity] = useState<number | ''>(100);
   const [oilTsp, setOilTsp] = useState<number>(0);
   const [spiceLevel, setSpiceLevel] = useState<'none' | 'low' | 'medium' | 'high'>('none');
   const [savingLog, setSavingLog] = useState(false);
@@ -133,7 +133,8 @@ export default function MealsPage() {
     if (!selectedFood || savingLog) return;
     setSavingLog(true);
     try {
-      const ratio = quantity / selectedFood.servingSize;
+      const validQty = typeof quantity === 'number' && quantity > 0 ? quantity : selectedFood.servingSize;
+      const ratio = validQty / selectedFood.servingSize;
       const oilCalories = oilTsp * 45;
       const oilFat = oilTsp * 5;
 
@@ -148,7 +149,7 @@ export default function MealsPage() {
         foodType: 'indian_food',
         foodId: selectedFood._id,
         foodName: selectedFood.name,
-        quantity,
+        quantity: validQty,
         unit: 'grams',
         calories,
         protein,
@@ -414,14 +415,27 @@ export default function MealsPage() {
                     <div className="flex flex-col gap-1.5">
                       <label className="text-[10px] font-bold uppercase tracking-widest text-text-secondary flex justify-between">
                         <span>Quantity (grams)</span>
-                        <span className="font-mono text-white font-bold">{quantity}g</span>
+                        <span className="font-mono text-white font-bold">{quantity || 0}g</span>
                       </label>
                       <input
                         type="number"
                         min="1"
                         max="2000"
                         value={quantity}
-                        onChange={(e) => setQuantity(parseInt(e.target.value) || 100)}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (val === '') {
+                            setQuantity('');
+                          } else {
+                            const parsed = parseInt(val, 10);
+                            setQuantity(isNaN(parsed) ? '' : parsed);
+                          }
+                        }}
+                        onBlur={() => {
+                          if (quantity === '' || quantity <= 0) {
+                            setQuantity(selectedFood?.servingSize || 100);
+                          }
+                        }}
                         className="cyber-input w-full font-mono"
                       />
                     </div>

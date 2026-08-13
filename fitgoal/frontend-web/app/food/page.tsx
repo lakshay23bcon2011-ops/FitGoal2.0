@@ -55,7 +55,7 @@ export default function FoodDatabase() {
   // Detail Modal states
   const [selectedFood, setSelectedFood] = useState<FoodItem | null>(null);
   const [logMealType, setLogMealType] = useState('breakfast');
-  const [logQuantity, setLogQuantity] = useState(100);
+  const [logQuantity, setLogQuantity] = useState<number | ''>(100);
   const [loggingItem, setLoggingItem] = useState(false);
 
   const fetchFoods = async () => {
@@ -94,14 +94,15 @@ export default function FoodDatabase() {
     if (!selectedFood || loggingItem) return;
     setLoggingItem(true);
     try {
-      const ratio = logQuantity / selectedFood.servingSize;
+      const validQty = typeof logQuantity === 'number' && logQuantity > 0 ? logQuantity : selectedFood.servingSize;
+      const ratio = validQty / selectedFood.servingSize;
       
       const payload = {
         mealType: logMealType,
         foodType: 'indian_food',
         foodId: selectedFood._id,
         foodName: selectedFood.name,
-        quantity: logQuantity,
+        quantity: validQty,
         unit: 'grams',
         calories: Math.round(selectedFood.calories * ratio),
         protein: Math.round((selectedFood.protein * ratio) * 10) / 10,
@@ -400,7 +401,20 @@ export default function FoodDatabase() {
                       type="number"
                       min="1"
                       value={logQuantity}
-                      onChange={(e) => setLogQuantity(parseInt(e.target.value) || 100)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === '') {
+                          setLogQuantity('');
+                        } else {
+                          const parsed = parseInt(val, 10);
+                          setLogQuantity(isNaN(parsed) ? '' : parsed);
+                        }
+                      }}
+                      onBlur={() => {
+                        if (logQuantity === '' || logQuantity <= 0) {
+                          setLogQuantity(selectedFood?.servingSize || 100);
+                        }
+                      }}
                       className="cyber-input w-full font-mono text-center"
                     />
                   </div>

@@ -39,7 +39,7 @@ export default function AICalorieCalculator() {
   // Ingredient search inputs
   const [ingQuery, setIngQuery] = useState('');
   const [ingResults, setIngResults] = useState<SearchFoodItem[]>([]);
-  const [ingQty, setIngQty] = useState(100);
+  const [ingQty, setIngQty] = useState<number | ''>(100);
   const [ingUnit, setIngUnit] = useState('grams');
   const [searching, setSearching] = useState(false);
 
@@ -101,7 +101,8 @@ export default function AICalorieCalculator() {
 
   const handleAddManualIngredient = () => {
     if (!ingQuery.trim()) return;
-    handleAddIngredient(ingQuery, ingQty, ingUnit);
+    const validQty = typeof ingQty === 'number' && ingQty > 0 ? ingQty : 100;
+    handleAddIngredient(ingQuery, validQty, ingUnit);
   };
 
   const handleRemoveIngredient = (index: number) => {
@@ -277,7 +278,20 @@ export default function AICalorieCalculator() {
                     type="number"
                     min="1"
                     value={ingQty}
-                    onChange={(e) => setIngQty(parseInt(e.target.value) || 10)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '') {
+                        setIngQty('');
+                      } else {
+                        const parsed = parseInt(val, 10);
+                        setIngQty(isNaN(parsed) ? '' : parsed);
+                      }
+                    }}
+                    onBlur={() => {
+                      if (ingQty === '' || ingQty <= 0) {
+                        setIngQty(100);
+                      }
+                    }}
                     className="cyber-input w-full text-center font-mono"
                     placeholder="Qty"
                   />
