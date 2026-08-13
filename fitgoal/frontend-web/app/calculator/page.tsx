@@ -45,6 +45,7 @@ const POPULAR_RAW_MATERIALS: SearchFoodItem[] = [
 
   // Pulses & Legumes (Dals)
   { _id: 'moong_dal', name: 'Raw Yellow Moong Dal', servingSize: 100 },
+  { _id: 'green_moong_whole', name: 'Raw Whole Green Moong (Sabut Moong)', servingSize: 100 },
   { _id: 'toor_dal', name: 'Raw Toor / Arhar Dal', servingSize: 100 },
   { _id: 'chana_dal', name: 'Raw Chana Dal', servingSize: 100 },
   { _id: 'masoor_dal', name: 'Raw Masoor Dal', servingSize: 100 },
@@ -131,6 +132,7 @@ export default function AICalorieCalculator() {
   const [searching, setSearching] = useState(false);
 
   const searchRef = useRef<HTMLDivElement>(null);
+  const qtyInputRef = useRef<HTMLInputElement>(null);
 
   // Click outside & Escape key listeners to close dropdown
   useEffect(() => {
@@ -408,13 +410,18 @@ export default function AICalorieCalculator() {
                         <div
                           key={item._id}
                           onClick={() => {
-                            handleAddIngredient(item.name, item.servingSize, 'grams');
+                            setIngQuery(item.name);
+                            setIngQty(item.servingSize);
                             setShowDropdown(false);
+                            setTimeout(() => {
+                              qtyInputRef.current?.focus();
+                              qtyInputRef.current?.select();
+                            }, 50);
                           }}
                           className="p-2.5 hover:bg-bg-primary cursor-pointer border-b border-card-border/50 text-white flex justify-between items-center transition-colors"
                         >
                           <span className="font-bold">{item.name}</span>
-                          <span className="text-[10px] font-mono text-accent-lime font-bold">+{item.servingSize}g</span>
+                          <span className="text-[10px] font-mono text-accent-lime font-bold">Select ({item.servingSize}g)</span>
                         </div>
                       ))}
                     </div>
@@ -424,6 +431,7 @@ export default function AICalorieCalculator() {
                 {/* Qty */}
                 <div className="md:col-span-2">
                   <input
+                    ref={qtyInputRef}
                     type="number"
                     min="1"
                     value={ingQty}
