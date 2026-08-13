@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useAuth } from '../../hooks/AuthContext';
 import GymBackground from '../../components/GymBackground';
 import Navigation from '../../components/Navigation';
@@ -39,9 +39,32 @@ export default function AICalorieCalculator() {
   // Ingredient search inputs
   const [ingQuery, setIngQuery] = useState('');
   const [ingResults, setIngResults] = useState<SearchFoodItem[]>([]);
+  const [showDropdown, setShowDropdown] = useState(false);
   const [ingQty, setIngQty] = useState<number | ''>(100);
   const [ingUnit, setIngUnit] = useState('grams');
   const [searching, setSearching] = useState(false);
+
+  const searchRef = useRef<HTMLDivElement>(null);
+
+  // Click outside & Escape key listeners to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   // Modifiers
   const [oilTsp, setOilTsp] = useState(1);
@@ -62,6 +85,7 @@ export default function AICalorieCalculator() {
     const searchIngredients = async () => {
       if (!ingQuery.trim()) {
         setIngResults([]);
+        setShowDropdown(false);
         return;
       }
       setSearching(true);
@@ -69,6 +93,7 @@ export default function AICalorieCalculator() {
         const res = await api.get(`/food/search?q=${ingQuery}`);
         if (res.data.success) {
           setIngResults(res.data.data);
+          setShowDropdown(res.data.data.length > 0);
         }
       } catch (err) {
         console.error('Failed to search ingredients:', err);
@@ -97,12 +122,14 @@ export default function AICalorieCalculator() {
     }
     setIngQuery('');
     setIngResults([]);
+    setShowDropdown(false);
   };
 
   const handleAddManualIngredient = () => {
     if (!ingQuery.trim()) return;
     const validQty = typeof ingQty === 'number' && ingQty > 0 ? ingQty : 100;
     handleAddIngredient(ingQuery, validQty, ingUnit);
+    setShowDropdown(false);
   };
 
   const handleRemoveIngredient = (index: number) => {
@@ -246,26 +273,45 @@ export default function AICalorieCalculator() {
               {/* Add Ingredient form controls */}
               <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
                 {/* Search */}
-                <div className="md:col-span-6 relative">
+                <div className="md:col-span-6 relative" ref={searchRef}>
                   <input
                     type="text"
                     placeholder="Search database or type ingredient"
                     value={ingQuery}
-                    onChange={(e) => setIngQuery(e.target.value)}
+                    onFocus={() => {
+                      if (ingResults.length > 0) setShowDropdown(true);
+                    }}
+                    onChange={(e) => {
+                      setIngQuery(e.target.value);
+                      setShowDropdown(true);
+                    }}
                     className="cyber-input w-full"
                   />
                   
                   {/* Dropdown search matches */}
-                  {ingResults.length > 0 && (
-                    <div className="absolute top-[100%] left-0 w-full bg-bg-secondary border border-card-border rounded-xl mt-1.5 z-20 max-h-[180px] overflow-y-auto shadow-2xl text-sm">
+                  {showDropdown && ingResults.length > 0 && (
+                    <div className="absolute top-[100%] left-0 w-full bg-bg-secondary border border-card-border rounded-xl mt-1.5 z-30 max-h-[220px] overflow-y-auto shadow-2xl text-sm">
+                      <div className="flex justify-between items-center px-3 py-1.5 border-b border-card-border/60 bg-bg-primary/90 sticky top-0 z-10 text-[10px] font-bold uppercase tracking-wider text-text-secondary">
+                        <span>Database Ingredients</span>
+                        <button
+                          type="button"
+                          onClick={() => setShowDropdown(false)}
+                          className="text-text-secondary hover:text-white cursor-pointer px-1 py-0.5"
+                        >
+                          ✕ Close
+                        </button>
+                      </div>
                       {ingResults.map((item) => (
                         <div
                           key={item._id}
-                          onClick={() => handleAddIngredient(item.name, item.servingSize, 'grams')}
-                          className="p-2.5 hover:bg-bg-primary cursor-pointer border-b border-card-border/50 text-white flex justify-between items-center"
+                          onClick={() => {
+                            handleAddIngredient(item.name, item.servingSize, 'grams');
+                            setShowDropdown(false);
+                          }}
+                          className="p-2.5 hover:bg-bg-primary cursor-pointer border-b border-card-border/50 text-white flex justify-between items-center transition-colors"
                         >
                           <span className="font-bold">{item.name}</span>
-                          <span className="text-[10px] font-mono text-text-secondary">+{item.servingSize}g</span>
+                          <span className="text-[10px] font-mono text-accent-lime font-bold">+{item.servingSize}g</span>
                         </div>
                       ))}
                     </div>

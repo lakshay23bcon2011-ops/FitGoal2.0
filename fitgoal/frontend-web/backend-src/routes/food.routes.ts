@@ -58,18 +58,50 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
-// GET /search?q= -> Shortcut regex search by name
+// GET /search?q= -> Shortcut regex search by name & tags
 router.get('/search', async (req: Request, res: Response) => {
   const searchTerm = req.query.q as string;
 
   try {
-    if (!searchTerm) {
+    if (!searchTerm || !searchTerm.trim()) {
       return sendSuccess(res, []);
     }
 
+    const trimmed = searchTerm.trim();
+    const regex = new RegExp(trimmed, 'i');
+
     const foods = await IndianFood.find({
-      name: { $regex: searchTerm, $options: 'i' }
-    }).limit(20);
+      $or: [
+        { name: regex },
+        { nameHindi: regex },
+        { tags: regex },
+        { category: regex }
+      ]
+    }).limit(30);
+
+    const termLower = trimmed.toLowerCase();
+
+    // Sort: prioritize exact name match, prefix match, raw ingredients, and shorter names
+    foods.sort((a, b) => {
+      const aName = a.name.toLowerCase();
+      const bName = b.name.toLowerCase();
+
+      if (aName === termLower && bName !== termLower) return -1;
+      if (bName === termLower && aName !== termLower) return 1;
+
+      const aStarts = aName.startsWith(termLower);
+      const bStarts = bName.startsWith(termLower);
+      if (aStarts && !bStarts) return -1;
+      if (!aStarts && bStarts) return 1;
+
+      const rawKeywords = ['raw', 'plain', 'boiled', 'flour', 'atta', 'rice', 'dal', 'paneer', 'milk', 'egg', 'oil', 'oats', 'curd', 'dahi', 'roti', 'chapati', 'chicken', 'paneer'];
+      const aIsRaw = rawKeywords.some(k => aName.includes(k));
+      const bIsRaw = rawKeywords.some(k => bName.includes(k));
+      if (aIsRaw && !bIsRaw) return -1;
+      if (!aIsRaw && bIsRaw) return 1;
+
+      return aName.length - bName.length;
+    });
 
     return sendSuccess(res, foods);
 
